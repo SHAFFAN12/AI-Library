@@ -1,0 +1,25 @@
+{
+  "name": "ai-automation-sdk",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "A developer-friendly JavaScript SDK for voice-powered web automation using simple utility classes.",
+  "main": "dist/ai-automation-sdk.min.js",
+  "scripts": {
+    "build": "rollup -c rollup.config.js",
+    "dev": "rollup -c rollup.config.js --watch"
+  },
+  "keywords": [
+    "ai",
+    "voice",
+    "automation",
+    "sdk",
+    "tailwind",
+    "web"
+  ],
+  "author": "AI Automation SDK",
+  "license": "MIT",
+  "devDependencies": {
+    "rollup": "^4.9.0",
+    "@rollup/plugin-terser": "^0.4.4"
+  }
+}

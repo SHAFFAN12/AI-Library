@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Automation SDK — Voice-Powered Web Automation</title>
+  <meta name="description"
+    content="A developer-friendly JavaScript SDK that enables intelligent voice-powered web automation. Add ai-* classes to your HTML and let users control your site with their voice." />
+  <link rel="stylesheet" href="styles/main.css" />
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%237c3aed'/><text y='22' x='6' font-size='18'>🎙</text></svg>" />
+</head>
+
+<body>
+
+  <!-- Background orbs -->
+  <div class="bg-orbs" aria-hidden="true"></div>
+
+  <div class="layout">
+
+    <!-- ═══ HEADER ═══════════════════════════════════════════════ -->
+    <header>
+      <a class="logo" href="#hero">
+        <div class="logo-icon">🎙</div>
+        AI Automation SDK
+      </a>
+
+      <nav class="header-nav">
+        <button class="menu-toggle" id="menu-toggle" aria-label="Toggle sidebar">☰ Menu</button>
+        <a href="#getting-started">Docs</a>
+        <a href="#voice-fill">Modules</a>
+        <a href="#examples">Examples</a>
+        <a href="https://github.com" class="btn-github" target="_blank" rel="noopener">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0 0 22 12.017C22 6.484 17.522 2 12 2z" />
+          </svg>
+          GitHub
+        </a>
+      </nav>
+    </header>
+
+    <!-- ═══ SIDEBAR ══════════════════════════════════════════════ -->
+    <aside id="sidebar">
+      <span class="sidebar-section-title">Introduction</span>
+      <a class="sidebar-link active" href="#hero">Overview</a>
+      <a class="sidebar-link" href="#getting-started">Getting Started</a>
+
+      <span class="sidebar-section-title">Modules</span>
+      <a class="sidebar-link" href="#voice-fill">
+        🎙 Voice Form Fill
+        <span class="badge">NEW</span>
+      </a>
+      <a class="sidebar-link" href="#smart-scroll">📜 Smart Scroll</a>
+      <a class="sidebar-link" href="#search">🔍 Search Automation</a>
+      <a class="sidebar-link" href="#navigate">🧭 Navigation</a>
+
+      <span class="sidebar-section-title">Reference</span>
+      <a class="sidebar-link" href="#all-commands">All Commands</a>
+      <a class="sidebar-link" href="#browser-support">Browser Support</a>
+      <a class="sidebar-link" href="#examples">Copy-Paste Examples</a>
+    </aside>
+
+    <!-- ═══ MAIN CONTENT ══════════════════════════════════════════ -->
+    <main>
+
+      <!-- HERO ──────────────────────────────────────────────────── -->
+      <section id="hero" class="docs-section">
+        <div class="hero-tag">Open Source · MIT License · Zero Dependencies</div>
+
+        <h1>
+          Voice-Powered<br>
+          Web Automation<br>
+          <span class="gradient-text">In One Script Tag</span>
+        </h1>
+
+        <p style="font-size:17px; max-width:560px; margin-top:20px; color:var(--text-2);">
+          AI Automation SDK lets you add intelligent voice features to any website just by adding
+          <code
+            style="font-family:var(--mono); font-size:14px; color:#a78bfa; background:rgba(124,58,237,0.12); padding:2px 8px; border-radius:5px;">ai-*</code>
+          CSS classes — similar to Tailwind. No config, no API keys, no framework required.
+        </p>
+
+        <div style="margin-top:20px; font-size:14px; color:var(--text-3);">
+          Try it now &rarr; <span id="typed-demo" class="typed-code"></span>
+        </div>
+
+        <div class="hero-cta">
+          <a href="#getting-started" class="btn btn-primary">🚀 Get Started</a>
+          <a href="#examples" class="btn btn-secondary">📋 Copy-Paste Examples</a>
+        </div>
+
+        <!-- Stats row -->
+        <div style="display:flex; gap:40px; margin-top:48px; padding-top:32px; border-top:1px solid var(--border);">
+          <div>
+            <div style="font-size:28px; font-weight:900; color:var(--text-1);" id="counter-kb">0</div>
+            <div style="font-size:12px; color:var(--text-3); margin-top:3px;">KB Bundle Size</div>
+          </div>
+          <div>
+            <div style="font-size:28px; font-weight:900; color:var(--text-1);" id="counter-modules">0</div>
+            <div style="font-size:12px; color:var(--text-3); margin-top:3px;">Built-in Modules</div>
+          </div>
+          <div>
+            <div style="font-size:28px; font-weight:900; color:var(--text-1);" id="counter-cmds">0</div>
+            <div style="font-size:12px; color:var(--text-3); margin-top:3px;">Voice Commands</div>
+          </div>
+          <div>
+            <div style="font-size:28px; font-weight:900; color:var(--text-1);">0</div>
+            <div style="font-size:12px; color:var(--text-3); margin-top:3px;">Dependencies</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FEATURES OVERVIEW ─────────────────────────────────────── -->
+      <section id="features" class="docs-section">
+        <p class="section-eyebrow">What's Included</p>
+        <h2>Four Powerful Modules</h2>
+        <p>Each module activates by adding a single class to your HTML element. Combine them freely.</p>
+
+        <div class="feature-grid">
+          <div class="feature-card">
+            <div class="card-icon icon-purple">🎙</div>
+            <div class="card-title">Voice Form Fill</div>
+            <p class="card-desc">Users fill form fields hands-free. Say the field name and value — the SDK matches and
+              fills it instantly.</p>
+            <code class="card-class">ai-voice-fill</code>
+          </div>
+          <div class="feature-card">
+            <div class="card-icon icon-cyan">📜</div>
+            <div class="card-title">Smart Scroll</div>
+            <p class="card-desc">Navigate pages with "scroll down", "next section", "go to top" and more. Section-aware
+              jumping built in.</p>
+            <code class="card-class">ai-smart-scroll</code>
+          </div>
+          <div class="feature-card">
+            <div class="card-icon icon-green">🔍</div>
+            <div class="card-title">Search Automation</div>
+            <p class="card-desc">Say "search for cats" and the SDK populates your search input and submits the form
+              automatically.</p>
+            <code class="card-class">ai-search</code>
+          </div>
+          <div class="feature-card">
+            <div class="card-icon icon-orange">🧭</div>
+            <div class="card-title">Navigation</div>
+            <p class="card-desc">"Go back", "go home", "open github.com" — full browser navigation via natural language
+              commands.</p>
+            <code class="card-class">ai-navigate</code>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- GETTING STARTED ───────────────────────────────────────── -->
+      <section id="getting-started" class="docs-section">
+        <p class="section-eyebrow">Quick Start</p>
+        <h2>Up and running in 60 seconds</h2>
+
+        <div class="install-card">
+          <p style="margin:0 0 4px; font-weight:600; color:var(--text-1);">No npm. No bundler. No config.</p>
+          <p style="margin:0; font-size:13px;">Just one script tag and your first <code
+              style="font-family:var(--mono); font-size:12px; color:#a78bfa;">ai-*</code> class.</p>
+        </div>
+
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h4>Add the script tag to your page</h4>
+              <div class="code-block">
+                <div class="code-header">
+                  <span>HTML</span>
+                  <button class="copy-btn" data-copy-target="step1-code">📋 Copy</button>
+                </div>
+                <pre class="code-body"
+                  id="step1-code"><span class="hl-tag">&lt;script</span> <span class="hl-attr">src</span>=<span class="hl-val">"ai-automation-sdk.min.js"</span><span class="hl-tag">&gt;&lt;/script&gt;</span></pre>
+              </div>
+              <p style="font-size:12px; color:var(--text-3); margin-top:8px;">Place before your closing <code
+                  style="font-family:var(--mono);">&lt;/body&gt;</code> tag. The SDK auto-initialises and adds a
+                floating mic button.</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h4>Add <code style="font-family:var(--mono); font-size:13px;">ai-*</code> classes to your elements</h4>
+              <div class="code-block">
+                <div class="code-header">
+                  <span>HTML</span>
+                  <button class="copy-btn" data-copy-target="step2-code">📋 Copy</button>
+                </div>
+                <pre class="code-body"
+                  id="step2-code"><span class="hl-cmt">&lt;!-- Voice-fill your contact form --&gt;</span>
+<span class="hl-tag">&lt;form</span> <span class="hl-attr">class</span>=<span class="hl-val">"ai-voice-fill"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;input</span> <span class="hl-attr">name</span>=<span class="hl-val">"name"</span> <span class="hl-attr">placeholder</span>=<span class="hl-val">"Full name"</span> <span class="hl-tag">/&gt;</span>
+  <span class="hl-tag">&lt;input</span> <span class="hl-attr">name</span>=<span class="hl-val">"email"</span> <span class="hl-attr">placeholder</span>=<span class="hl-val">"Email"</span> <span class="hl-tag">/&gt;</span>
+<span class="hl-tag">&lt;/form&gt;</span>
+
+<span class="hl-cmt">&lt;!-- Voice-controlled scrolling --&gt;</span>
+<span class="hl-tag">&lt;body</span> <span class="hl-attr">class</span>=<span class="hl-val">"ai-smart-scroll ai-navigate"</span><span class="hl-tag">&gt;</span></pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h4>Click the mic button and speak</h4>
+              <p>The floating 🎙 button in the bottom-right corner starts listening. Grant microphone permission when
+                prompted.</p>
+              <div class="voice-hint">
+                <span class="mic-icon">🎤</span>
+                <span>Try saying <code>"fill name John Smith"</code>, <code>"scroll down"</code>, or
+                  <code>"search for AI tools"</code></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- MODULE: VOICE FILL ────────────────────────────────────── -->
+      <section id="voice-fill" class="docs-section">
+        <div class="module-header">
+          <div class="module-icon icon-purple">🎙</div>
+          <div>
+            <p class="section-eyebrow" style="margin:0">Module</p>
+            <h2 style="margin:0">Voice Form Fill</h2>
+          </div>
+        </div>
+        <p>Enable hands-free form filling on any <code
+            style="font-family:var(--mono); font-size:13px;">&lt;form&gt;</code>. On activation the SDK
+          <strong>automatically scrapes the form</strong> to detect all fields (by <code
+            style="font-family:var(--mono); font-size:13px;">name</code>, <code
+            style="font-family:var(--mono); font-size:13px;">placeholder</code>, <code
+            style="font-family:var(--mono); font-size:13px;">aria-label</code>, associated <code
+            style="font-family:var(--mono); font-size:13px;">&lt;label&gt;</code>) and shows a visual detection panel.
+          Say <code style="font-family:var(--mono); font-size:13px;">"autofill"</code> to fill them all step-by-step.
+        </p>
+
+        <span class="tag tag-purple" style="margin-bottom:20px">class="ai-voice-fill"</span>
+
+        <h3 style="margin-top:24px">Voice Commands</h3>
+        <div class="table-wrap">
+          <table class="cmd-table">
+            <thead>
+              <tr>
+                <th>Say</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="cmd">"what fields"</td>
+                <td>Shows a list of all detected fields</td>
+              </tr>
+              <tr>
+                <td class="cmd">"autofill"</td>
+                <td>Starts a sequential guided session — fills each field one by one</td>
+              </tr>
+              <tr>
+                <td class="cmd">"fill name John Smith"</td>
+                <td>Fills the Name field directly</td>
+              </tr>
+              <tr>
+                <td class="cmd">"fill email"</td>
+                <td>Selects Email field, awaits your next utterance as the value</td>
+              </tr>
+              <tr>
+                <td class="cmd">"skip" / "next field"</td>
+                <td>Skips the current field during autofill session</td>
+              </tr>
+              <tr>
+                <td class="cmd">"submit"</td>
+                <td>Submits the form</td>
+              </tr>
+              <tr>
+                <td class="cmd">"clear form"</td>
+                <td>Clears all inputs</td>
+              </tr>
+              <tr>
+                <td class="cmd">"stop filling"</td>
+                <td>Cancels the current session</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Usage</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span>HTML</span>
+            <button class="copy-btn" data-copy-target="vf-code">📋 Copy</button>
+          </div>
+          <pre class="code-body" id="vf-code"><span class="hl-tag">&lt;form</span> <span class="hl-attr">class</span>=<span class="hl-val">"ai-voice-fill"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;input</span> <span class="hl-attr">type</span>=<span class="hl-val">"text"</span>  <span class="hl-attr">name</span>=<span class="hl-val">"name"</span>    <span class="hl-attr">placeholder</span>=<span class="hl-val">"Full name"</span>    <span class="hl-tag">/&gt;</span>
+  <span class="hl-tag">&lt;input</span> <span class="hl-attr">type</span>=<span class="hl-val">"email"</span> <span class="hl-attr">name</span>=<span class="hl-val">"email"</span>   <span class="hl-attr">placeholder</span>=<span class="hl-val">"Email"</span>         <span class="hl-tag">/&gt;</span>
+  <span class="hl-tag">&lt;input</span> <span class="hl-attr">type</span>=<span class="hl-val">"tel"</span>   <span class="hl-attr">name</span>=<span class="hl-val">"phone"</span>   <span class="hl-attr">placeholder</span>=<span class="hl-val">"Phone number"</span>   <span class="hl-tag">/&gt;</span>
+  <span class="hl-tag">&lt;button</span> <span class="hl-attr">type</span>=<span class="hl-val">"submit"</span><span class="hl-tag">&gt;</span>Submit<span class="hl-tag">&lt;/button&gt;</span>
+<span class="hl-tag">&lt;/form&gt;</span></pre>
+        </div>
+
+        <h3>Live Demo</h3>
+        <div class="demo-box">
+          <form class="demo-form ai-voice-fill" id="demo-form" onsubmit="return demoSubmit(event)">
+            <div class="row">
+              <input type="text" name="name" placeholder="Full name" />
+              <input type="email" name="email" placeholder="Email" />
+            </div>
+            <div class="row">
+              <input type="tel" name="phone" placeholder="Phone number" />
+              <input type="text" name="company" placeholder="Company" />
+            </div>
+            <textarea name="message" placeholder="Message" rows="3" style="resize:vertical;"></textarea>
+            <button type="submit" class="demo-submit">Submit Form</button>
+          </form>
+          <div class="voice-hint" style="margin-top:20px">
+            <span class="mic-icon">🎤</span>
+            <div>The panel above the form shows all detected fields. Try:
+              <code>"autofill"</code> to fill step-by-step &nbsp;|&nbsp;
+              <code>"what fields"</code> &nbsp;|&nbsp;
+              <code>"fill name John Smith"</code> &nbsp;|&nbsp;
+              <code>"skip"</code> to skip a field &nbsp;|&nbsp;
+              <code>"submit"</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- MODULE: SMART SCROLL ──────────────────────────────────── -->
+      <section id="smart-scroll" class="docs-section">
+        <div class="module-header">
+          <div class="module-icon icon-cyan">📜</div>
+          <div>
+            <p class="section-eyebrow" style="margin:0">Module</p>
+            <h2 style="margin:0">Smart Scroll</h2>
+          </div>
+        </div>
+        <p>Navigate any page by voice. Knows about your page's headings and sections — so "next section" actually jumps
+          to the next heading intelligently.</p>
+
+        <span class="tag tag-cyan">class="ai-smart-scroll"</span>
+
+        <h3 style="margin-top:24px">Voice Commands</h3>
+        <div class="table-wrap">
+          <table class="cmd-table">
+            <thead>
+              <tr>
+                <th>Say</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="cmd">"scroll down"</td>
+                <td>Scroll down 40% of viewport</td>
+              </tr>
+              <tr>
+                <td class="cmd">"scroll up"</td>
+                <td>Scroll up 40% of viewport</td>
+              </tr>
+              <tr>
+                <td class="cmd">"scroll down a lot"</td>
+                <td>Scroll down 80% of viewport</td>
+              </tr>
+              <tr>
+                <td class="cmd">"page down"</td>
+                <td>Scroll one full page</td>
+              </tr>
+              <tr>
+                <td class="cmd">"scroll to top" / "go to top"</td>
+                <td>Jump to page top</td>
+              </tr>
+              <tr>
+                <td class="cmd">"scroll to bottom"</td>
+                <td>Jump to page bottom</td>
+              </tr>
+              <tr>
+                <td class="cmd">"next section"</td>
+                <td>Jump to the next heading/section</td>
+              </tr>
+              <tr>
+                <td class="cmd">"previous section"</td>
+                <td>Jump to the previous heading/section</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Usage</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span>HTML</span>
+            <button class="copy-btn" data-copy-target="ss-code">📋 Copy</button>
+          </div>
+          <pre class="code-body" id="ss-code"><span class="hl-cmt">&lt;!-- Apply to body for page-wide scroll --&gt;</span>
+<span class="hl-tag">&lt;body</span> <span class="hl-attr">class</span>=<span class="hl-val">"ai-smart-scroll"</span><span class="hl-tag">&gt;</span>
+
+<span class="hl-cmt">&lt;!-- Or apply to a scrollable container --&gt;</span>
+<span class="hl-tag">&lt;div</span> <span class="hl-attr">class</span>=<span class="hl-val">"ai-smart-scroll"</span> <span class="hl-attr">style</span>=<span class="hl-val">"height:400px; overflow-y:auto"</span><span class="hl-tag">&gt;</span>
+  ...
+<span class="hl-tag">&lt;/div&gt;</span></pre>
+        </div>
+
+        <h3>Live Demo</h3>
+        <div class="demo-box">
+          <p style="font-size:13px; color:var(--text-3); margin-bottom:12px">This entire page has <code
+              style="font-family:var(--mono); font-size:12px;">ai-smart-scroll</code> applied on the body.</p>
+          <div class="voice-hint">
+            <span class="mic-icon">🎤</span>
+            <div>Try: <code>"scroll down"</code>, <code>"scroll to top"</code>, <code>"next section"</code>,
+              <code>"previous section"</code>, <code>"page down"</code></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- MODULE: SEARCH ────────────────────────────────────────── -->
+      <section id="search" class="docs-section">
+        <div class="module-header">
+          <div class="module-icon icon-green">🔍</div>
+          <div>
+            <p class="section-eyebrow" style="margin:0">Module</p>
+            <h2 style="margin:0">Search Automation</h2>
+          </div>
+        </div>
+        <p>Add <code style="font-family:var(--mono); font-size:13px;">ai-search</code> to any search input. Voice
+          commands populate the field and trigger form submission instantly.</p>
+
+        <span class="tag tag-green">class="ai-search"</span>
+
+        <h3 style="margin-top:24px">Voice Commands</h3>
+        <div class="table-wrap">
+          <table class="cmd-table">
+            <thead>
+              <tr>
+                <th>Say</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="cmd">"search for [query]"</td>
+                <td>Fill input + submit form</td>
+              </tr>
+              <tr>
+                <td class="cmd">"find [query]"</td>
+                <td>Fill input + submit form</td>
+              </tr>
+              <tr>
+                <td class="cmd">"look up [query]"</td>
+                <td>Fill input + submit form</td>
+              </tr>
+              <tr>
+                <td class="cmd">"clear search"</td>
+                <td>Empty the search input</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Usage</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span>HTML</span>
+            <button class="copy-btn" data-copy-target="s-code">📋 Copy</button>
+          </div>
+          <pre class="code-body" id="s-code"><span class="hl-tag">&lt;form</span> <span class="hl-attr">action</span>=<span class="hl-val">"/search"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;input</span>
+    <span class="hl-attr">type</span>=<span class="hl-val">"search"</span>
+    <span class="hl-attr">class</span>=<span class="hl-val">"ai-search"</span>
+    <span class="hl-attr">name</span>=<span class="hl-val">"q"</span>
+    <span class="hl-attr">placeholder</span>=<span class="hl-val">'Try: "search for JavaScript tutorials"'</span>
+  <span class="hl-tag">/&gt;</span>
+<span class="hl-tag">&lt;/form&gt;</span></pre>
+        </div>
+
+        <h3>Live Demo</h3>
+        <div class="demo-box">
+          <form class="search-demo-wrap" onsubmit="return searchDemoSubmit(event)">
+            <input type="search" class="search-demo-input ai-search" id="search-demo-input"
+              placeholder='Try: "search for JavaScript tutorials"' />
+            <button type="submit" class="search-demo-btn">🔍 Search</button>
+          </form>
+          <div id="search-result" style="margin-top:14px; font-size:13px; color:var(--accent-3); display:none;"></div>
+          <div class="voice-hint" style="margin-top:16px">
+            <span class="mic-icon">🎤</span>
+            <div>Say: <code>"search for machine learning"</code> or <code>"find React tutorials"</code> or
+              <code>"look up CSS grid"</code></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- MODULE: NAVIGATE ──────────────────────────────────────── -->
+      <section id="navigate" class="docs-section">
+        <div class="module-header">
+          <div class="module-icon icon-orange">🧭</div>
+          <div>
+            <p class="section-eyebrow" style="margin:0">Module</p>
+            <h2 style="margin:0">Navigation</h2>
+          </div>
+        </div>
+        <p>Control browser navigation by voice. Navigate back, forward, reload, jump to any URL or anchor, or open new
+          tabs — all hands-free.</p>
+
+        <span class="tag tag-purple">class="ai-navigate"</span>
+
+        <h3 style="margin-top:24px">Voice Commands</h3>
+        <div class="table-wrap">
+          <table class="cmd-table">
+            <thead>
+              <tr>
+                <th>Say</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="cmd">"go back"</td>
+                <td><code>history.back()</code></td>
+              </tr>
+              <tr>
+                <td class="cmd">"go forward"</td>
+                <td><code>history.forward()</code></td>
+              </tr>
+              <tr>
+                <td class="cmd">"refresh"</td>
+                <td><code>location.reload()</code></td>
+              </tr>
+              <tr>
+                <td class="cmd">"go home"</td>
+                <td>Navigate to <code>/</code></td>
+              </tr>
+              <tr>
+                <td class="cmd">"open github.com"</td>
+                <td>Navigate to github.com</td>
+              </tr>
+              <tr>
+                <td class="cmd">"go to dashboard"</td>
+                <td>Navigate to closest matching URL or Google search</td>
+              </tr>
+              <tr>
+                <td class="cmd">"open new tab wikipedia.org"</td>
+                <td>Open URL in a new tab</td>
+              </tr>
+              <tr>
+                <td class="cmd">"scroll to #contact"</td>
+                <td>Smooth-scroll to element with id <code>contact</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Usage</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span>HTML</span>
+            <button class="copy-btn" data-copy-target="n-code">📋 Copy</button>
+          </div>
+          <pre class="code-body"
+            id="n-code"><span class="hl-cmt">&lt;!-- Apply to body for global navigation commands --&gt;</span>
+<span class="hl-tag">&lt;body</span> <span class="hl-attr">class</span>=<span class="hl-val">"ai-navigate ai-smart-scroll"</span><span class="hl-tag">&gt;</span></pre>
+        </div>
+
+        <h3 style="margin-top:24px">Live Demo</h3>
+        <div class="demo-box">
+          <div class="nav-demo-btns">
+            <button class="nav-demo-btn" onclick="simulateNav('go back')">⬅ Go Back</button>
+            <button class="nav-demo-btn" onclick="simulateNav('go forward')">➡ Go Forward</button>
+            <button class="nav-demo-btn" onclick="simulateNav('scroll to top')">⬆ Go to Top</button>
+            <button class="nav-demo-btn" onclick="simulateNav('scroll to bottom')">⬇ Go to Bottom</button>
+            <button class="nav-demo-btn" onclick="simulateNav('refresh')">🔄 Refresh</button>
+          </div>
+          <div class="voice-hint" style="margin-top:16px">
+            <span class="mic-icon">🎤</span>
+            <div>Say: <code>"go back"</code>, <code>"go home"</code>, <code>"open google.com"</code>,
+              <code>"scroll to #search"</code></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- ALL COMMANDS REFERENCE ────────────────────────────────── -->
+      <section id="all-commands" class="docs-section">
+        <p class="section-eyebrow">Reference</p>
+        <h2>All Voice Commands</h2>
+        <p>Complete reference for all voice commands across all modules.</p>
+
+        <div class="table-wrap">
+          <table class="cmd-table">
+            <thead>
+              <tr>
+                <th>Module</th>
+                <th>Command</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="tag tag-purple">voice-fill</span></td>
+                <td class="cmd">"what fields"</td>
+                <td>Show all detected fields</td>
+              </tr>
+              <tr>
+                <td><span class="tag tag-purple">voice-fill</span></td>
+                <td class="cmd">"autofill"</td>
+                <td>Sequential guided fill session</td>
+              </tr>
+              <tr>
+                <td><span class="tag tag-purple">voice-fill</span></td>
+                <td class="cmd">"fill [field] [value]"</td>
+                <td>Fill named field with value</td>
+              </tr>
+              <tr>
+                <td><span class="tag tag-purple">voice-fill</span></td>
+                <td class="cmd">"fill [field]"</td>
+                <td>Select field, await value</td>
+              </tr>
+              <tr>
+                <td><span class="tag tag-purple">voice-fill</span></td>
+                <td class="cmd">"skip" / "next field"</td>
+                <td>Skip current session field</td>
+              </tr>
+              <tr>
+                <td><span class="tag tag-purple">voice-fill</span></td>
+                <td class="cmd">"submit"</td>
+                <td>Submit active form</td>
+              </tr>
+              <tr>
+                <td><span class="tag tag-purple">voice-fill</span></td>
+                <td class="cmd">"clear form"</td>
+                <td>Clear all form fields</td>
+              </tr>
+              <tr>
+                <td><span class="tag tag-cyan">smart-scroll</span></td>
+                <td class="cmd">"scroll down/up"</td>
+                <td>Scroll 40% of viewport</td>
+              </tr>
+              <tr>
+                <td><span class="tag tag-cyan">smart-scroll</span></td>
+                <td class="cmd">"scroll down a lot"</td>
+                <td>Scroll 80% of viewport</td>
+              </tr>
+              <tr>
+                <td><span class="tag tag-cyan">smart-scroll</span></td>
+                <td class="cmd">"page down/up"</td>
+                <td>Scroll full viewport height</td>
+              </tr>
+              <tr>
+                <td><span class="tag tag-cyan">smart-scroll</span></td>
+                <td class="cmd">"scroll to top/bottom"</td>
+                <td>Jump to page top/bottom</td>
+              </tr>
+              <tr>
+                <td><span class="tag tag-cyan">smart-scroll</span></td>
+                <td class="cmd">"next/previous section"</td>
+                <td>Jump between headings</td>
+              </tr>
+              <tr>
+                <td><span class="tag tag-green">search</span></td>
+                <td class="cmd">"search for [query]"</td>
+                <td>Fill + submit search</td>
+              </tr>
+              <tr>
+                <td><span class="tag tag-green">search</span></td>
+                <td class="cmd">"find [query]"</td>
+                <td>Fill + submit search</td>
+              </tr>
+              <tr>
+                <td><span class="tag tag-green">search</span></td>
+                <td class="cmd">"clear search"</td>
+                <td>Clear search input</td>
+              </tr>
+              <tr>
+                <td><span class="tag tag-purple">navigate</span></td>
+                <td class="cmd">"go back/forward"</td>
+                <td>Browser history</td>
+              </tr>
+              <tr>
+                <td><span class="tag tag-purple">navigate</span></td>
+                <td class="cmd">"refresh"</td>
+                <td>Reload page</td>
+              </tr>
+              <tr>
+                <td><span class="tag tag-purple">navigate</span></td>
+                <td class="cmd">"go home"</td>
+                <td>Navigate to /</td>
+              </tr>
+              <tr>
+                <td><span class="tag tag-purple">navigate</span></td>
+                <td class="cmd">"open [url]"</td>
+                <td>Navigate to URL</td>
+              </tr>
+              <tr>
+                <td><span class="tag tag-purple">navigate</span></td>
+                <td class="cmd">"open new tab [url]"</td>
+                <td>Open URL in new tab</td>
+              </tr>
+              <tr>
+                <td><span class="tag tag-purple">navigate</span></td>
+                <td class="cmd">"scroll to #[id]"</td>
+                <td>Jump to element</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- BROWSER SUPPORT ───────────────────────────────────────── -->
+      <section id="browser-support" class="docs-section">
+        <p class="section-eyebrow">Compatibility</p>
+        <h2>Browser Support</h2>
+        <p>AI Automation SDK uses the <a href="https://caniuse.com/speech-recognition" target="_blank">Web Speech
+            API</a> which requires a modern Chromium-based browser.</p>
+
+        <div class="table-wrap">
+          <table class="cmd-table">
+            <thead>
+              <tr>
+                <th>Browser</th>
+                <th>Voice Commands</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>✅ Chrome 25+</td>
+                <td>Full support</td>
+                <td>Recommended</td>
+              </tr>
+              <tr>
+                <td>✅ Edge 79+</td>
+                <td>Full support</td>
+                <td>Chromium-based</td>
+              </tr>
+              <tr>
+                <td>✅ Opera 27+</td>
+                <td>Full support</td>
+                <td>Chromium-based</td>
+              </tr>
+              <tr>
+                <td>⚠️ Safari 14.1+</td>
+                <td>Partial</td>
+                <td>Requires user gesture; continuous recognition limited</td>
+              </tr>
+              <tr>
+                <td>❌ Firefox</td>
+                <td>Not supported</td>
+                <td>No Web Speech API. SDK loads without errors but mic is disabled.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="voice-hint" style="margin-top:0">
+          <span class="mic-icon">💡</span>
+          <div>The SDK gracefully degrades — if the browser doesn't support speech recognition, the mic button is hidden
+            and all other page functionality works normally.</div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- EXAMPLES ──────────────────────────────────────────────── -->
+      <section id="examples" class="docs-section">
+        <p class="section-eyebrow">Copy-Paste Examples</p>
+        <h2>Ready-to-Use Snippets</h2>
+
+        <h3>Complete Contact Form</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span>contact.html</span>
+            <button class="copy-btn" data-copy-target="ex1-code">📋 Copy</button>
+          </div>
+          <pre class="code-body" id="ex1-code"><span class="hl-tag">&lt;!DOCTYPE html&gt;</span>
+<span class="hl-tag">&lt;html&gt;&lt;body</span> <span class="hl-attr">class</span>=<span class="hl-val">"ai-smart-scroll ai-navigate"</span><span class="hl-tag">&gt;</span>
+
+<span class="hl-tag">&lt;form</span> <span class="hl-attr">class</span>=<span class="hl-val">"ai-voice-fill"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;input</span> <span class="hl-attr">name</span>=<span class="hl-val">"name"</span>    <span class="hl-attr">placeholder</span>=<span class="hl-val">"Full name"</span>     <span class="hl-tag">/&gt;</span>
+  <span class="hl-tag">&lt;input</span> <span class="hl-attr">name</span>=<span class="hl-val">"email"</span>   <span class="hl-attr">placeholder</span>=<span class="hl-val">"Email address"</span>  <span class="hl-tag">/&gt;</span>
+  <span class="hl-tag">&lt;input</span> <span class="hl-attr">name</span>=<span class="hl-val">"subject"</span> <span class="hl-attr">placeholder</span>=<span class="hl-val">"Subject"</span>        <span class="hl-tag">/&gt;</span>
+  <span class="hl-tag">&lt;textarea</span> <span class="hl-attr">name</span>=<span class="hl-val">"message"</span> <span class="hl-attr">placeholder</span>=<span class="hl-val">"Message"</span><span class="hl-tag">&gt;&lt;/textarea&gt;</span>
+  <span class="hl-tag">&lt;button</span> <span class="hl-attr">type</span>=<span class="hl-val">"submit"</span><span class="hl-tag">&gt;</span>Send<span class="hl-tag">&lt;/button&gt;</span>
+<span class="hl-tag">&lt;/form&gt;</span>
+
+<span class="hl-tag">&lt;script</span> <span class="hl-attr">src</span>=<span class="hl-val">"ai-automation-sdk.min.js"</span><span class="hl-tag">&gt;&lt;/script&gt;</span>
+<span class="hl-tag">&lt;/body&gt;&lt;/html&gt;</span></pre>
+        </div>
+
+        <h3>Search Page</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span>search.html</span>
+            <button class="copy-btn" data-copy-target="ex2-code">📋 Copy</button>
+          </div>
+          <pre class="code-body"
+            id="ex2-code"><span class="hl-tag">&lt;form</span> <span class="hl-attr">action</span>=<span class="hl-val">"/results"</span> <span class="hl-attr">method</span>=<span class="hl-val">"get"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;input</span>
+    <span class="hl-attr">type</span>=<span class="hl-val">"search"</span>
+    <span class="hl-attr">name</span>=<span class="hl-val">"q"</span>
+    <span class="hl-attr">class</span>=<span class="hl-val">"ai-search"</span>
+    <span class="hl-attr">placeholder</span>=<span class="hl-val">'Say "search for [topic]"'</span>
+  <span class="hl-tag">/&gt;</span>
+<span class="hl-tag">&lt;/form&gt;</span>
+
+<span class="hl-tag">&lt;script</span> <span class="hl-attr">src</span>=<span class="hl-val">"ai-automation-sdk.min.js"</span><span class="hl-tag">&gt;&lt;/script&gt;</span></pre>
+        </div>
+
+        <h3>All Modules Combined</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span>full-example.html</span>
+            <button class="copy-btn" data-copy-target="ex3-code">📋 Copy</button>
+          </div>
+          <pre class="code-body" id="ex3-code"><span class="hl-tag">&lt;!DOCTYPE html&gt;</span>
+<span class="hl-tag">&lt;html&gt;</span>
+<span class="hl-tag">&lt;body</span> <span class="hl-attr">class</span>=<span class="hl-val">"ai-smart-scroll ai-navigate"</span><span class="hl-tag">&gt;</span>
+
+  <span class="hl-cmt">&lt;!-- Voice-powered search bar --&gt;</span>
+  <span class="hl-tag">&lt;input</span> <span class="hl-attr">type</span>=<span class="hl-val">"search"</span> <span class="hl-attr">class</span>=<span class="hl-val">"ai-search"</span> <span class="hl-attr">placeholder</span>=<span class="hl-val">"Search…"</span> <span class="hl-tag">/&gt;</span>
+
+  <span class="hl-cmt">&lt;!-- Voice-filled registration form --&gt;</span>
+  <span class="hl-tag">&lt;form</span> <span class="hl-attr">class</span>=<span class="hl-val">"ai-voice-fill"</span><span class="hl-tag">&gt;</span>
+    <span class="hl-tag">&lt;input</span> <span class="hl-attr">name</span>=<span class="hl-val">"username"</span>  <span class="hl-attr">placeholder</span>=<span class="hl-val">"Username"</span>  <span class="hl-tag">/&gt;</span>
+    <span class="hl-tag">&lt;input</span> <span class="hl-attr">name</span>=<span class="hl-val">"password"</span>  <span class="hl-attr">type</span>=<span class="hl-val">"password"</span> <span class="hl-attr">placeholder</span>=<span class="hl-val">"Password"</span>  <span class="hl-tag">/&gt;</span>
+    <span class="hl-tag">&lt;button</span> <span class="hl-attr">type</span>=<span class="hl-val">"submit"</span><span class="hl-tag">&gt;</span>Sign up<span class="hl-tag">&lt;/button&gt;</span>
+  <span class="hl-tag">&lt;/form&gt;</span>
+
+  <span class="hl-tag">&lt;script</span> <span class="hl-attr">src</span>=<span class="hl-val">"ai-automation-sdk.min.js"</span><span class="hl-tag">&gt;&lt;/script&gt;</span>
+<span class="hl-tag">&lt;/body&gt;</span>
+<span class="hl-tag">&lt;/html&gt;</span></pre>
+        </div>
+      </section>
+
+    </main><!-- /main -->
+
+    <!-- ═══ FOOTER ═══════════════════════════════════════════════ -->
+    <footer>
+      <div>© 2026 AI Automation SDK · MIT License</div>
+      <div style="display:flex; gap:20px;">
+        <a href="#hero">Docs</a>
+        <a href="#all-commands">Commands</a>
+        <a href="#examples">Examples</a>
+        <a href="https://github.com" target="_blank">GitHub</a>
+      </div>
+    </footer>
+
+  </div><!-- /layout -->
+
+  <!-- Load the AI Automation SDK -->
+  <script src="../sdk/dist/ai-automation-sdk.min.js"></script>
+
+  <!-- Docs scripts -->
+  <script src="scripts/docs.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Automation SDK — Smoke Test</title>
+    <style>
+        body {
+            font-family: system-ui;
+            background: #111;
+            color: #e2e8f0;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #a78bfa;
+        }
+
+        #log {
+            background: #1e1e2e;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: monospace;
+            font-size: 13px;
+            margin-top: 20px;
+            min-height: 120px;
+        }
+
+        .ok {
+            color: #34d399;
+        }
+
+        .err {
+            color: #f87171;
+        }
+
+        form {
+            margin-top: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 400px;
+        }
+
+        input {
+            background: #1e1e2e;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: #e2e8f0;
+            font-size: 14px;
+        }
+
+        button {
+            background: #7c3aed;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            align-self: flex-start;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>🧪 AI Automation SDK — Smoke Test</h1>
+    <p>Open DevTools Console to see all SDK logs. Check the log below for module detection.</p>
+
+    <div id="log">Waiting for SDK…</div>
+
+    <h2 style="margin-top:32px; color:#06b6d4;">Voice Fill Test Form</h2>
+    <form class="ai-voice-fill" onsubmit="return false;">
+        <input name="name" placeholder="Full name" />
+        <input name="email" placeholder="Email" />
+        <input name="phone" placeholder="Phone" />
+        <input name="company" placeholder="Company" />
+        <button type="submit">Submit</button>
+    </form>
+
+    <h2 style="margin-top:32px; color:#10b981;">Search Test</h2>
+    <form onsubmit="return false;">
+        <input type="search" class="ai-search" placeholder='Say "search for cats"' style="width:400px" />
+    </form>
+
+    <script src="../sdk/dist/ai-automation-sdk.min.js"></script>
+    <script>
+        // Class applied to window for smoke test
+        document.body.classList.add('ai-smart-scroll', 'ai-navigate');
+
+        const logEl = document.getElementById('log');
+        function log(msg, ok = true) {
+            const line = document.createElement('div');
+            line.className = ok ? 'ok' : 'err';
+            line.textContent = (ok ? '✅ ' : '❌ ') + msg;
+            logEl.appendChild(line);
+        }
+
+        window.addEventListener('load', () => {
+            // Check SDK loaded
+            if (window.AIAutomation) {
+                log('SDK bundle loaded (window.AIAutomation present)');
+            } else {
+                log('SDK bundle not detected on window', false);
+            }
+
+            // Check mic indicator injected
+            if (document.getElementById('ai-sdk-mic-indicator')) {
+                log('Mic indicator UI injected into DOM');
+            } else {
+                log('Mic indicator missing', false);
+            }
+
+            // Check form activation
+            const form = document.querySelector('.ai-voice-fill');
+            if (form && form.__ai_voice_fill_activated) {
+                log('ai-voice-fill module activated on form');
+            } else {
+                log('ai-voice-fill module NOT activated (check console)', false);
+            }
+
+            // Check ai-search
+            const search = document.querySelector('.ai-search');
+            if (search && search.__ai_search_activated) {
+                log('ai-search module activated on input');
+            } else {
+                log('ai-search module NOT activated (check console)', false);
+            }
+
+            // Check smart-scroll / navigate (on body)
+            if (document.body.__ai_smart_scroll_activated) {
+                log('ai-smart-scroll module activated on body');
+            } else {
+                log('ai-smart-scroll NOT activated on body — will activate on DOMContentLoaded classes', false);
+            }
+
+            log('Smoke test complete. Click the 🎙 mic button to test voice!');
+        });
+
+        // Listen for voice events
+        document.addEventListener('ai:voice', (e) => {
+            log(`Voice event fired: "${e.detail.raw}" (confidence: ${(e.detail.confidence * 100).toFixed(0)}%)`);
+        });
+    </script>
+</body>
+
+</html>

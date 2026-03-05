@@ -1,0 +1,6 @@
+Sorted: [
+  { aliases: [ 'name', 'full name' ] },
+  { aliases: [ 'email' ] },
+  { aliases: [] }
+]
+Sorted2: [ { aliases: [ 'name', 'full name' ] }, { aliases: [ 'email' ] } ]

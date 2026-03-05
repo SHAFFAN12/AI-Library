@@ -172,8 +172,10 @@ register('ai-voice-fill', (form) => {
         const t = e.detail.transcript;
         const raw = e.detail.raw;
 
+        // --- Bug Fix #1: Removed bare |stop which was too greedy and cancelled fill
+        //     when users spoke values containing the word "stop".
         // Cancel / stop
-        if (t.match(/stop filling|cancel fill|exit fill|stop session|cancel session|stop/)) {
+        if (t.match(/stop filling|cancel fill|exit fill|stop session|cancel session/)) {
             if (inSession && activeField) _clearHighlight(activeField.el);
             inSession = false; activeField = null; awaitingValue = false;
             badge.textContent = `🎙 ${fieldMap.length} fields detected`;
@@ -186,6 +188,25 @@ register('ai-voice-fill', (form) => {
             badge.textContent = `📋 ${names}`;
             console.log('[AI SDK] Detected fields:', names);
             setTimeout(() => (badge.textContent = `🎙 ${fieldMap.length} fields detected`), 5000);
+            return;
+        }
+
+        // --- Bug Fix #3: Moved awaitingValue BEFORE the "autofill"/"fill form" trigger
+        //     so that a pending field value is never misrouted as a new fill-all command.
+        // Awaiting value (session or targeted)
+        if (awaitingValue && activeField) {
+            fillField(activeField, raw);
+            badge.textContent = `✅ "${activeField.label}" → "${raw}"`;
+            if (inSession) {
+                const filled = activeField;
+                awaitingValue = false;
+                activeField = null;
+                setTimeout(() => { _clearHighlight(filled.el); sessionIdx++; promptSessionField(); }, 900);
+            } else {
+                awaitingValue = false;
+                activeField = null;
+                setTimeout(() => (badge.textContent = `🎙 ${fieldMap.length} fields detected`), 2500);
+            }
             return;
         }
 
@@ -220,23 +241,6 @@ register('ai-voice-fill', (form) => {
             return;
         }
 
-        // Awaiting value (session or targeted)
-        if (awaitingValue && activeField) {
-            fillField(activeField, raw);
-            badge.textContent = `✅ "${activeField.label}" → "${raw}"`;
-            if (inSession) {
-                const filled = activeField;
-                awaitingValue = false;
-                activeField = null;
-                setTimeout(() => { _clearHighlight(filled.el); sessionIdx++; promptSessionField(); }, 900);
-            } else {
-                awaitingValue = false;
-                activeField = null;
-                setTimeout(() => (badge.textContent = `🎙 ${fieldMap.length} fields detected`), 2500);
-            }
-            return;
-        }
-
         // "fill [field] [value]" or "fill [field]" — targeted fill
         const fillMatch = t.match(/^(?:fill|set|enter|type)\s+(.+)$/);
         if (fillMatch) {
@@ -244,10 +248,11 @@ register('ai-voice-fill', (form) => {
             let matched = null;
             let value = null;
 
+            // --- Bug Fix #2: safe max alias length to avoid -Infinity on empty aliases
+            const maxAliasLen = (fm) => fm.aliases.length ? Math.max(...fm.aliases.map((x) => x.length)) : 0;
+
             // Longest-alias-first search
-            const sorted = [...fieldMap].sort((a, b) =>
-                Math.max(...b.aliases.map((x) => x.length)) - Math.max(...a.aliases.map((x) => x.length))
-            );
+            const sorted = [...fieldMap].sort((a, b) => maxAliasLen(b) - maxAliasLen(a));
             for (const fm of sorted) {
                 for (const alias of fm.aliases.sort((a, b) => b.length - a.length)) {
                     if (rest.startsWith(alias + ' ') || rest === alias) {

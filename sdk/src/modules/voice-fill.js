@@ -250,19 +250,37 @@ register('ai-voice-fill', (form) => {
             );
             for (const fm of sorted) {
                 for (const alias of fm.aliases.sort((a, b) => b.length - a.length)) {
-                    if (rest.startsWith(alias)) {
+                    if (rest.startsWith(alias + ' ') || rest === alias) {
                         matched = fm;
-                        value = rest.slice(alias.length).trim();
+                        value = rest.startsWith(alias + ' ') ? rest.slice(alias.length).trim() : null;
                         break;
                     }
-                    if (rest.includes(alias)) {
-                        const idx = rest.indexOf(alias);
+                    if (rest.includes(' ' + alias + ' ')) {
+                        const idx = rest.indexOf(' ' + alias + ' ');
                         matched = fm;
-                        value = (rest.slice(0, idx) + rest.slice(idx + alias.length)).trim();
+                        value = (rest.slice(0, idx) + rest.slice(idx + alias.length + 1)).trim();
                         break;
                     }
                 }
                 if (matched) break;
+            }
+
+            // Fallback: tokenized alias matching for partial fields (e.g., "name" matching "complete name")
+            if (!matched) {
+                for (const fm of sorted) {
+                    for (const alias of fm.aliases) {
+                        const words = alias.split(/\s+/);
+                        for (const word of words) {
+                            if (word.length >= 3 && (rest.startsWith(word + ' ') || rest === word)) {
+                                matched = fm;
+                                value = rest.startsWith(word + ' ') ? rest.slice(word.length).trim() : null;
+                                break;
+                            }
+                        }
+                        if (matched) break;
+                    }
+                    if (matched) break;
+                }
             }
 
             if (!matched) matched = findField(rest);

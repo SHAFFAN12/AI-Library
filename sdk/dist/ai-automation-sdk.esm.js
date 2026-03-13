@@ -64,7 +64,7 @@ class VoiceEngine {
             const result = event.results[event.results.length - 1];
             if (!result.isFinal) return;
 
-            const transcript = result[0].transcript.trim().toLowerCase();
+            const transcript = result[0].transcript.trim().toLowerCase().replace(/[.,!?;:]+$/, '');
             const confidence = result[0].confidence;
 
             this._setIndicatorState('processing');

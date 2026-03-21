@@ -299,9 +299,14 @@ register('ai-voice-fill', (form) => {
     let inSession = false;
 
     // ── Badge (status label above form) ──────────────────────────────────────
+    // Badge lives in a wrapper OUTSIDE the form so badge text changes
+    // don't trigger the MutationObserver that watches the form's children.
+    const wrapper = document.createElement('div');
+    wrapper.style.cssText = 'position:relative;';
+    form.parentNode.insertBefore(wrapper, form);
+    wrapper.appendChild(form);
     const badge = _createBadge();
-    form.style.position = 'relative';
-    form.appendChild(badge);
+    wrapper.appendChild(badge);
 
     // ── Field scraping ────────────────────────────────────────────────────────
     // Scrape all fillable inputs and produce enriched metadata objects
@@ -364,10 +369,17 @@ register('ai-voice-fill', (form) => {
     badge.textContent = `🎙 ${fieldMap.length} field${fieldMap.length !== 1 ? 's' : ''} detected`;
 
     // Re-scrape if form DOM changes (SPA / dynamic forms)
+    // Disconnect before updating to avoid re-entry cascade
+    let _observing = false;
     const formObserver = new MutationObserver(() => {
+        if (_observing) return; // guard re-entry
+        _observing = true;
+        formObserver.disconnect();
         fieldMap = scrapeFields();
         _showFieldPanel(form, fieldMap);
         badge.textContent = `🎙 ${fieldMap.length} fields detected`;
+        formObserver.observe(form, { childList: true, subtree: true });
+        _observing = false;
     });
     formObserver.observe(form, { childList: true, subtree: true });
 
@@ -388,8 +400,31 @@ register('ai-voice-fill', (form) => {
     // ── Fill helper ──────────────────────────────────────────────────────────
     function fillField(fieldMeta, value) {
         const el = fieldMeta.el;
+        if (!el || !el.isConnected) {
+            console.warn('[AI SDK] fillField: element not in DOM, re-scraping…');
+            fieldMap = scrapeFields();
+            const fresh = fieldMap.find((f) => f.label === fieldMeta.label || f.aliases.some((a) => fieldMeta.aliases.includes(a)));
+            if (!fresh) return;
+            return fillField(fresh, value);
+        }
         el.focus();
-        el.value = value;
+        // Use native value setter so React / Vue controlled inputs detect the change
+        let nativeSet = null;
+        let proto = Object.getPrototypeOf(el);
+        while (proto && proto !== Object.prototype) {
+            const desc = Object.getOwnPropertyDescriptor(proto, 'value');
+            if (desc && desc.set) {
+                nativeSet = desc.set;
+                break;
+            }
+            proto = Object.getPrototypeOf(proto);
+        }
+
+        if (nativeSet) {
+            nativeSet.call(el, value);
+        } else {
+            el.value = value;
+        }
         el.dispatchEvent(new Event('input', { bubbles: true }));
         el.dispatchEvent(new Event('change', { bubbles: true }));
         _highlightField(form, el);
@@ -510,7 +545,7 @@ register('ai-voice-fill', (form) => {
         }
 
         // "fill [field] [value]" or "fill [field]" — targeted fill
-        const fillMatch = t.match(/^(?:fill|set|enter|type)\s+(.+)$/);
+        const fillMatch = t.match(/^(?:fill|autofill|auto fill|set|enter|type)\s+(.+)$/);
         if (fillMatch) {
             const rest = fillMatch[1].trim();
             let matched = null;
@@ -531,7 +566,7 @@ register('ai-voice-fill', (form) => {
                     if (rest.includes(' ' + alias + ' ')) {
                         const idx = rest.indexOf(' ' + alias + ' ');
                         matched = fm;
-                        value = (rest.slice(0, idx) + rest.slice(idx + alias.length + 1)).trim();
+                        value = (rest.slice(0, idx) + ' ' + rest.slice(idx + alias.length + 1)).trim();
                         break;
                     }
                 }

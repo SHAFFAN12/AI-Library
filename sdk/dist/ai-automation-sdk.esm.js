@@ -187,7 +187,8 @@ class VoiceEngine {
       #ai-sdk-transcript.visible { display: block; }
     `;
 
-        document.addEventListener('DOMContentLoaded', () => {
+        const initUI = () => {
+            if (document.getElementById('ai-sdk-mic-indicator')) return;
             document.head.appendChild(style);
             document.body.appendChild(container);
 
@@ -202,7 +203,13 @@ class VoiceEngine {
                 clearTimeout(this._transcriptTimer);
                 this._transcriptTimer = setTimeout(() => el.classList.remove('visible'), 2800);
             });
-        });
+        };
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initUI);
+        } else {
+            initUI();
+        }
     }
 
     _setIndicatorState(state) {
